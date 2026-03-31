@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bookshelf App - Manage Your Library</title>
+  <meta name="description" content="A simple and elegant application to manage your personal book collections.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <h1>Bookshelf App</h1>
+  </header>
+
+  <main>
+    <section class="form-container">
+      <h2>Tambah Buku Baru</h2>
+      <form id="bookForm" novalidate>
+        <div class="input-group">
+          <label for="bookFormTitle">Judul</label>
+          <input id="bookFormTitle" name="title" type="text" required placeholder="Masukkan judul buku">
+          <span class="error-msg">Judul wajib diisi</span>
+        </div>
+        <div class="input-group">
+          <label for="bookFormAuthor">Penulis</label>
+          <input id="bookFormAuthor" name="author" type="text" required placeholder="Masukkan nama penulis">
+          <span class="error-msg">Penulis wajib diisi</span>
+        </div>
+        <div class="input-group">
+          <label for="bookFormYear">Tahun</label>
+          <input id="bookFormYear" name="year" type="number" required placeholder="Masukkan tahun terbit">
+          <span class="error-msg">Tahun wajib diisi (angka)</span>
+        </div>
+        <div class="input-group inline">
+          <input id="bookFormIsComplete" name="isComplete" type="checkbox">
+          <label for="bookFormIsComplete">Selesai dibaca</label>
+        </div>
+        <button id="bookFormSubmit" type="submit">Masukkan Buku ke Rak <span>Belum selesai dibaca</span></button>
+      </form>
+    </section>
+
+    <div class="bookshelf-layout">
+      <section class="shelf">
+        <h2>Belum Selesai Dibaca</h2>
+        <div id="incompleteBookList" class="book-list"></div>
+      </section>
+
+      <section class="shelf">
+        <h2>Selesai Dibaca</h2>
+        <div id="completeBookList" class="book-list"></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
