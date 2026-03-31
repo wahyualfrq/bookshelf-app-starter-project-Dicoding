@@ -8,6 +8,8 @@ const incompleteBookList = document.getElementById('incompleteBookList');
 const completeBookList = document.getElementById('completeBookList');
 const bookFormSubmit = document.getElementById('bookFormSubmit');
 const bookFormIsComplete = document.getElementById('bookFormIsComplete');
+const searchBookForm = document.getElementById('searchBook');
+const searchBookTitle = document.getElementById('searchBookTitle');
 
 /**
  * Initialize application
@@ -26,6 +28,13 @@ function init() {
   bookForm.addEventListener('submit', (event) => {
     event.preventDefault();
     addBook();
+  });
+
+  // Handle search submission
+  searchBookForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const query = searchBookTitle.value.trim().toLowerCase();
+    renderBooks(query);
   });
 }
 
@@ -93,7 +102,7 @@ function toggleBookStatus(bookId) {
   if (bookIndex !== -1) {
     books[bookIndex].isComplete = !books[bookIndex].isComplete;
     saveData();
-    renderBooks();
+    renderBooks(searchBookTitle.value.trim().toLowerCase());
   }
 }
 
@@ -105,7 +114,7 @@ function deleteBook(bookId) {
   if (confirmDelete) {
     books = books.filter(book => book.id !== bookId);
     saveData();
-    renderBooks();
+    renderBooks(searchBookTitle.value.trim().toLowerCase());
   }
 }
 
@@ -116,12 +125,19 @@ function createBookElement(book) {
   const container = document.createElement('article');
   container.className = 'book-item';
   container.setAttribute('data-bookid', book.id);
+  container.setAttribute('data-testid', 'bookItem');
 
   const title = document.createElement('h3');
   title.innerText = book.title;
+  title.setAttribute('data-testid', 'bookItemTitle');
 
-  const authorAndYear = document.createElement('p');
-  authorAndYear.innerText = `Penulis: ${book.author} | Tahun: ${book.year}`;
+  const author = document.createElement('p');
+  author.innerText = `Penulis: ${book.author}`;
+  author.setAttribute('data-testid', 'bookItemAuthor');
+
+  const year = document.createElement('p');
+  year.innerText = `Tahun: ${book.year}`;
+  year.setAttribute('data-testid', 'bookItemYear');
 
   const actions = document.createElement('div');
   actions.className = 'book-actions';
@@ -129,15 +145,17 @@ function createBookElement(book) {
   const toggleBtn = document.createElement('button');
   toggleBtn.className = 'btn btn-toggle';
   toggleBtn.innerText = book.isComplete ? 'Tandai Belum Selesai' : 'Tandai Selesai';
+  toggleBtn.setAttribute('data-testid', 'bookItemIsCompleteButton');
   toggleBtn.addEventListener('click', () => toggleBookStatus(book.id));
 
   const deleteBtn = document.createElement('button');
   deleteBtn.className = 'btn btn-delete';
   deleteBtn.innerText = 'Hapus Buku';
+  deleteBtn.setAttribute('data-testid', 'bookItemDeleteButton');
   deleteBtn.addEventListener('click', () => deleteBook(book.id));
 
   actions.append(toggleBtn, deleteBtn);
-  container.append(title, authorAndYear, actions);
+  container.append(title, author, year, actions);
 
   return container;
 }
@@ -145,11 +163,15 @@ function createBookElement(book) {
 /**
  * Render all books to shelves
  */
-function renderBooks() {
+function renderBooks(filterQuery = '') {
   incompleteBookList.innerHTML = '';
   completeBookList.innerHTML = '';
 
-  for (const book of books) {
+  const filteredBooks = books.filter(book => 
+    book.title.toLowerCase().includes(filterQuery)
+  );
+
+  for (const book of filteredBooks) {
     const bookElem = createBookElement(book);
     if (book.isComplete) {
       completeBookList.append(bookElem);
